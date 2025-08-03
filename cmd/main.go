@@ -6,14 +6,14 @@ import (
 	"log"
 	"os"
 
-	"github.com/dknathalage/dknathalage/pkg/plugin"
-	"github.com/dknathalage/dknathalage/pkg/plugins/terraform"
-	"github.com/dknathalage/dknathalage/pkg/scanner"
+	"github.com/dknathalage/dkn/pkg/plugin"
+	"github.com/dknathalage/dkn/pkg/plugins/terraform"
+	"github.com/dknathalage/dkn/pkg/scanner"
 )
 
 func main() {
 	if len(os.Args) < 1 {
-		log.Fatal("Usage: dknathalage [plugin-name]")
+		log.Fatal("Usage: cli [plugin-name]")
 	}
 
 	cwd, err := os.Getwd()

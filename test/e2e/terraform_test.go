@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/dknathalage/dknathalage/pkg/plugins/terraform"
+	"github.com/dknathalage/dkn/pkg/plugins/terraform"
 )
 
 func TestTerraformPlugin_Generate(t *testing.T) {

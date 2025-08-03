@@ -16,23 +16,23 @@ func NewFileScanner(rootDir string) *FileScanner {
 
 func (s *FileScanner) ScanForConfigs() ([]string, error) {
 	var configFiles []string
-	
+
 	entries, err := os.ReadDir(s.rootDir)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
 		}
-		
+
 		filename := entry.Name()
 		if strings.HasSuffix(filename, ".yaml") || strings.HasSuffix(filename, ".yml") {
 			configFiles = append(configFiles, filename)
 		}
 	}
-	
+
 	return configFiles, nil
 }
 

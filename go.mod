@@ -1,4 +1,4 @@
-module github.com/dknathalage/dknathalage
+module github.com/dknathalage/dkn
 
 go 1.21
 
