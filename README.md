@@ -1,56 +1,44 @@
-# Don Athalage
+# Code Generator CLI
 
-## Profile 👔
+A plugin-based CLI that automatically generates code configurations by scanning files in the root directory.
 
-Software engineer passionate about distributed systems and Go programming.
+## How it works
 
-## Projects 🚀
+The CLI scans your root directory for configuration files and generates the corresponding code based on plugins:
 
-- **This Repo**: Self-updating GitHub profile
-- **Other Projects**: Coming soon!
+- `terraform.yaml` → generates Terraform modules using `./pkg/plugins/terraform`
 
-## Skills 🛠️
+Each plugin defines the generation requirements and templates for its specific technology.
 
+## Installation
 
-<table>
-	<tr>
-		<th>Programming Languages</th>
-		<th>Tools</th>
-		<th>Cloud Providers</th>
-	</tr>
-	<tr>
-		<td>
-			<ul>
-				<li>Go</li>
-				<li>Python</li>
-				<li>JavaScript</li>
-				<li>Swift</li>
-			</ul>
-		</td>
-		<td>
-			<ul>
-				<li>Docker</li>
-				<li>Kubernetes</li>
-				<li>Terraform</li>
-				<li>GitHub Actions</li>
-			</ul>
-		</td>
-		<td>
-			<ul>
-				<li>AWS</li>
-				<li>GCP</li>
-			</ul>
-		</td>
-	</tr>
-</table>
+```bash
+go install
+```
 
+## Usage
 
-## Certificates 📋
+```bash
+# Generate all configurations based on files found in root
+./codegen
 
+# Generate specific configuration
+./codegen terraform
+```
 
-- AWS Certified Solutions Architect - Associate
-- AWS Certified Developer - Associate
-- AWS Certified DevOps - Professional
-- GCP Associate Cloud Engineer
-	
+## Plugin Structure
 
+```
+pkg/plugins/
+├── terraform/     # Terraform generation logic
+```
+
+## Development
+
+```bash
+# Build the CLI
+go build -o codegen ./cmd
+
+# Run tasks
+task [task-name]
+```
