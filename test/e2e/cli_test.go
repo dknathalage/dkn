@@ -19,7 +19,11 @@ environments:
   - dev
   - prod`
 
-	configPath := filepath.Join(tempDir, "terraform.yaml")
+	terraformDir := filepath.Join(tempDir, "terraform")
+	if err := os.MkdirAll(terraformDir, 0755); err != nil {
+		t.Fatalf("Failed to create terraform directory: %v", err)
+	}
+	configPath := filepath.Join(terraformDir, "terraform.yaml")
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
 		t.Fatalf("Failed to write test config: %v", err)
 	}
@@ -46,8 +50,8 @@ environments:
 		t.Error("Expected completion message")
 	}
 
-	terraformDir := filepath.Join(tempDir, "terraform")
-	if _, err := os.Stat(terraformDir); os.IsNotExist(err) {
+	terraformOutputDir := filepath.Join(tempDir, "terraform")
+	if _, err := os.Stat(terraformOutputDir); os.IsNotExist(err) {
 		t.Error("Terraform directory should be created")
 	}
 }
@@ -60,7 +64,11 @@ func TestCLI_SpecificPlugin(t *testing.T) {
 environments:
   - test`
 
-	configPath := filepath.Join(tempDir, "terraform.yaml")
+	terraformDir := filepath.Join(tempDir, "terraform")
+	if err := os.MkdirAll(terraformDir, 0755); err != nil {
+		t.Fatalf("Failed to create terraform directory: %v", err)
+	}
+	configPath := filepath.Join(terraformDir, "terraform.yaml")
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
 		t.Fatalf("Failed to write test config: %v", err)
 	}
@@ -79,8 +87,8 @@ environments:
 		t.Error("Expected terraform generation success message")
 	}
 
-	terraformDir := filepath.Join(tempDir, "terraform", "service")
-	if _, err := os.Stat(terraformDir); os.IsNotExist(err) {
+	terraformOutputDir := filepath.Join(tempDir, "terraform", "service")
+	if _, err := os.Stat(terraformOutputDir); os.IsNotExist(err) {
 		t.Error("Component directory should be created")
 	}
 }
@@ -133,7 +141,7 @@ func buildCLI(t *testing.T) string {
 	
 	codegenPath := filepath.Join(projectRoot, "codegen-test")
 	
-	cmd := exec.CommandContext(ctx, "go", "build", "-o", codegenPath, "./cmd")
+	cmd := exec.CommandContext(ctx, "go", "build", "-o", codegenPath, ".")
 	cmd.Dir = projectRoot
 	
 	if err := cmd.Run(); err != nil {

@@ -20,7 +20,11 @@ environments:
   - staging
   - prod`
 
-	configPath := filepath.Join(tempDir, "terraform.yaml")
+	terraformDir := filepath.Join(tempDir, "terraform")
+	if err := os.MkdirAll(terraformDir, 0755); err != nil {
+		t.Fatalf("Failed to create terraform directory: %v", err)
+	}
+	configPath := filepath.Join(terraformDir, "terraform.yaml")
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
 		t.Fatalf("Failed to write test config: %v", err)
 	}
@@ -33,10 +37,10 @@ environments:
 		t.Fatalf("Failed to generate terraform config: %v", err)
 	}
 
-	terraformDir := filepath.Join(tempDir, "terraform")
+	terraformOutputDir := filepath.Join(tempDir, "terraform")
 
 	for _, component := range []string{"webapi", "database"} {
-		componentDir := filepath.Join(terraformDir, component)
+		componentDir := filepath.Join(terraformOutputDir, component)
 
 		expectedFiles := []string{
 			"main.tf",
@@ -71,7 +75,11 @@ func TestTerraformPlugin_GeneratedContent(t *testing.T) {
 environments:
   - testenv`
 
-	configPath := filepath.Join(tempDir, "terraform.yaml")
+	terraformDir := filepath.Join(tempDir, "terraform")
+	if err := os.MkdirAll(terraformDir, 0755); err != nil {
+		t.Fatalf("Failed to create terraform directory: %v", err)
+	}
+	configPath := filepath.Join(terraformDir, "terraform.yaml")
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
 		t.Fatalf("Failed to write test config: %v", err)
 	}

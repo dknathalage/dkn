@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/dknathalage/dkn/pkg/plugin"
 	"github.com/dknathalage/dkn/pkg/plugins/terraform"
@@ -35,13 +36,43 @@ func main() {
 			log.Fatalf("Plugin '%s' not found", pluginName)
 		}
 
-		configPath := fileScanner.GetConfigPath(plugin.ConfigFile())
-		if _, err := os.Stat(configPath); os.IsNotExist(err) {
-			log.Fatalf("Configuration file '%s' not found", plugin.ConfigFile())
-		}
+		// For plugins with patterns, scan for matching configs
+		configPattern := plugin.ConfigFile()
+		if strings.Contains(configPattern, "*") {
+			configFiles, err := fileScanner.ScanForConfigs()
+			if err != nil {
+				log.Fatalf("Failed to scan for config files: %v", err)
+			}
 
-		if err := plugin.Generate(ctx, configPath, outputDir); err != nil {
-			log.Fatalf("Failed to generate with plugin '%s': %v", pluginName, err)
+			var matchingConfigs []string
+			for _, configFile := range configFiles {
+				if matchedPlugin, found := registry.FindByConfigFile(configFile); found && matchedPlugin == plugin {
+					matchingConfigs = append(matchingConfigs, configFile)
+				}
+			}
+
+			if len(matchingConfigs) == 0 {
+				log.Fatalf("No configuration files found for plugin '%s'", pluginName)
+			}
+
+			for _, configFile := range matchingConfigs {
+				configPath := fileScanner.GetConfigPath(configFile)
+				fmt.Printf("🔧 Generating %s with %s plugin...\n", configFile, plugin.Name())
+				if err := plugin.Generate(ctx, configPath, outputDir); err != nil {
+					log.Printf("❌ Failed to generate with %s plugin for %s: %v", plugin.Name(), configFile, err)
+					continue
+				}
+			}
+		} else {
+			// For plugins with exact config paths (like terraform/terraform.yaml)
+			configPath := fileScanner.GetConfigPath(plugin.ConfigFile())
+			if _, err := os.Stat(configPath); os.IsNotExist(err) {
+				log.Fatalf("Configuration file '%s' not found", plugin.ConfigFile())
+			}
+
+			if err := plugin.Generate(ctx, configPath, outputDir); err != nil {
+				log.Fatalf("Failed to generate with plugin '%s': %v", pluginName, err)
+			}
 		}
 		return
 	}

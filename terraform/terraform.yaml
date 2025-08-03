@@ -1,0 +1,4 @@
+components:
+  - test
+environments:
+  - dev
