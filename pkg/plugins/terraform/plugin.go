@@ -241,6 +241,7 @@ tasks:
 		prefix := fmt.Sprintf("%s/%s/%s/%s", ctx.Org, ctx.Repo, ctx.Component, env)
 		content += `  init:` + env + `:
     desc: Initialize Terraform for ` + ctx.Component + ` in ` + env + ` environment
+		internal: true
     cmds:
       - terraform init -reconfigure -backend-config="prefix=` + prefix + `"
 
@@ -255,12 +256,6 @@ tasks:
     deps: [init:` + env + `]
     cmds:
       - terraform apply -var-file="tfvars/` + env + `.tfvars" --auto-approve
-
-  destroy:` + env + `:
-    desc: Destroy Terraform resources for ` + ctx.Component + ` in ` + env + ` environment
-    deps: [init:` + env + `]
-    cmds:
-      - terraform destroy -var-file="tfvars/` + env + `.tfvars" --auto-approve
 
 `
 	}
