@@ -254,13 +254,13 @@ tasks:
     desc: Apply Terraform changes for ` + ctx.Component + ` in ` + env + ` environment
     deps: [tf:init:` + env + `]
     cmds:
-      - terraform apply -var-file="tfvars/` + env + `.tfvars"
+      - terraform apply -var-file="tfvars/` + env + `.tfvars" --auto-approve
 
   tf:destroy:` + env + `:
     desc: Destroy Terraform resources for ` + ctx.Component + ` in ` + env + ` environment
     deps: [tf:init:` + env + `]
     cmds:
-      - terraform destroy -var-file="tfvars/` + env + `.tfvars"
+      - terraform destroy -var-file="tfvars/` + env + `.tfvars" --auto-approve
 
 `
 	}
