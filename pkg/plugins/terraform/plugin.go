@@ -180,7 +180,6 @@ func (p *TerraformPlugin) generateVariablesTf(ctx *GenerateContext) error {
 variable "project_name" {
   description = "Name of the project"
   type        = string
-  default     = "` + ctx.Repo + `"
 }
 
 variable "component_name" {
