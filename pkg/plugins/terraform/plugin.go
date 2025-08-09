@@ -241,7 +241,7 @@ tasks:
 		prefix := fmt.Sprintf("%s/%s/%s/%s", ctx.Org, ctx.Repo, ctx.Component, env)
 		content += `  init:` + env + `:
     desc: Initialize Terraform for ` + ctx.Component + ` in ` + env + ` environment
-		internal: true
+    internal: true
     cmds:
       - terraform init -reconfigure -backend-config="prefix=` + prefix + `"
 
