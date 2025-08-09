@@ -239,26 +239,26 @@ tasks:
 	// Generate environment-specific tasks with proper backend initialization
 	for _, env := range ctx.Environments {
 		prefix := fmt.Sprintf("%s/%s/%s/%s", ctx.Org, ctx.Repo, ctx.Component, env)
-		content += `  tf:init:` + env + `:
+		content += `  init:` + env + `:
     desc: Initialize Terraform for ` + ctx.Component + ` in ` + env + ` environment
     cmds:
       - terraform init -reconfigure -backend-config="prefix=` + prefix + `"
 
-  tf:plan:` + env + `:
+  plan:` + env + `:
     desc: Plan Terraform changes for ` + ctx.Component + ` in ` + env + ` environment
-    deps: [tf:init:` + env + `]
+    deps: [init:` + env + `]
     cmds:
       - terraform plan -var-file="tfvars/` + env + `.tfvars"
 
-  tf:apply:` + env + `:
+  apply:` + env + `:
     desc: Apply Terraform changes for ` + ctx.Component + ` in ` + env + ` environment
-    deps: [tf:init:` + env + `]
+    deps: [init:` + env + `]
     cmds:
       - terraform apply -var-file="tfvars/` + env + `.tfvars" --auto-approve
 
-  tf:destroy:` + env + `:
+  destroy:` + env + `:
     desc: Destroy Terraform resources for ` + ctx.Component + ` in ` + env + ` environment
-    deps: [tf:init:` + env + `]
+    deps: [init:` + env + `]
     cmds:
       - terraform destroy -var-file="tfvars/` + env + `.tfvars" --auto-approve
 
