@@ -5,26 +5,21 @@ vars:
   COMPONENT: test
 
 tasks:
-  tf:init:dev:
+  init:dev:
     desc: Initialize Terraform for test in dev environment
+    internal: true
     cmds:
       - terraform init -reconfigure -backend-config="prefix=dknathalage/dkn/test/dev"
 
-  tf:plan:dev:
+  plan:dev:
     desc: Plan Terraform changes for test in dev environment
-    deps: [tf:init:dev]
+    deps: [init:dev]
     cmds:
       - terraform plan -var-file="tfvars/dev.tfvars"
 
-  tf:apply:dev:
+  apply:dev:
     desc: Apply Terraform changes for test in dev environment
-    deps: [tf:init:dev]
+    deps: [init:dev]
     cmds:
-      - terraform apply -var-file="tfvars/dev.tfvars"
-
-  tf:destroy:dev:
-    desc: Destroy Terraform resources for test in dev environment
-    deps: [tf:init:dev]
-    cmds:
-      - terraform destroy -var-file="tfvars/dev.tfvars"
+      - terraform apply -var-file="tfvars/dev.tfvars" --auto-approve
 

@@ -32,6 +32,7 @@ environments:
 	
 	cmd := exec.Command(codegenPath)
 	cmd.Dir = tempDir
+	cmd.Env = append(os.Environ(), "GO_TEST_MODE=1")
 	output, err := cmd.CombinedOutput()
 	
 	if err != nil {
@@ -77,6 +78,7 @@ environments:
 	
 	cmd := exec.Command(codegenPath, "terraform")
 	cmd.Dir = tempDir
+	cmd.Env = append(os.Environ(), "GO_TEST_MODE=1")
 	output, err := cmd.CombinedOutput()
 	
 	if err != nil {

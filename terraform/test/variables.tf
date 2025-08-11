@@ -2,7 +2,6 @@
 variable "project_name" {
   description = "Name of the project"
   type        = string
-  default     = "dkn"
 }
 
 variable "component_name" {
