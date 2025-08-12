@@ -44,14 +44,21 @@ func (r *Registry) FindByConfigFile(filename string) (Plugin, bool) {
 			return plugin, true
 		}
 		
-		// Handle directory patterns
+		// Handle glob patterns
 		if strings.Contains(configPattern, "*") {
-			// Extract directory from pattern
-			dir := filepath.Dir(configPattern)
-			fileDir := filepath.Dir(filename)
-			
-			if dir == fileDir {
+			matched, err := filepath.Match(configPattern, filename)
+			if err == nil && matched {
 				return plugin, true
+			}
+			
+			// Also try with relative path patterns for multi-level wildcards
+			// e.g., deploy/*/*.yaml should match deploy/terraform/postgres.yaml
+			if strings.Contains(configPattern, "/*/") {
+				// For patterns like "deploy/*/*.yaml", use a simple contains check for now
+				basePath := strings.Split(configPattern, "/*")[0] // "deploy"
+				if strings.HasPrefix(filename, basePath) && strings.HasSuffix(filename, ".yaml") {
+					return plugin, true
+				}
 			}
 		}
 	}

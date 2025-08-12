@@ -1,0 +1,7 @@
+kind: Terraform
+metadata:
+  name: postgres
+spec:
+  environmentRefs:
+    - dev
+    - prod

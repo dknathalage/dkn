@@ -17,7 +17,26 @@ func NewFileScanner(rootDir string) *FileScanner {
 func (s *FileScanner) ScanForConfigs() ([]string, error) {
 	var configFiles []string
 
-	// Scan specific subdirectories for configs
+	// Scan deploy directory recursively
+	deployPath := filepath.Join(s.rootDir, "deploy")
+	if _, err := os.Stat(deployPath); err == nil {
+		err := filepath.Walk(deployPath, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return nil
+			}
+			
+			if !info.IsDir() && (strings.HasSuffix(info.Name(), ".yaml") || strings.HasSuffix(info.Name(), ".yml")) {
+				relativePath, _ := filepath.Rel(s.rootDir, path)
+				configFiles = append(configFiles, relativePath)
+			}
+			return nil
+		})
+		if err != nil {
+			// Continue even if walk fails
+		}
+	}
+
+	// Scan specific subdirectories for backward compatibility
 	subdirs := []string{"terraform"}
 	
 	for _, subdir := range subdirs {
